@@ -1,23 +1,19 @@
-import os
-
-import sys
 from pathlib import Path
-src_path = Path(__file__).parent.parent.resolve()
-sys.path.append(str(src_path))
-
 import argparse
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from utils.load_params import load_params 
 
 
-def data_split(data_dir, 
-               data_fname, 
-               cat_cols,
-               num_cols, 
-               targ_col, 
-               test_size, 
-               random_state):
+def data_split(
+    data_dir, 
+    data_fname, 
+    cat_cols,
+    num_cols, 
+    targ_col, 
+    test_size, 
+    random_state
+):
     df = pd.read_csv(data_dir/data_fname)
     X, y = df[cat_cols + num_cols], df[targ_col]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
@@ -28,11 +24,15 @@ def data_split(data_dir,
 
 
 if __name__ == '__main__':
+    # library to handle command-line arguments
     args_parser = argparse.ArgumentParser()
+    # --config specifies that a flag named --config is expected.
+    # dest='config': Sets the destination name for this argument. In this case, the value provided to --config will be accessible as args.config.
     args_parser.add_argument('--config', dest='config', required=True)
     args = args_parser.parse_args()
     
     params = load_params(params_path=args.config)
+    
     data_dir = Path(params.base.data_dir)
     data_fname = params.base.data_fname
     cat_cols = params.base.cat_cols
@@ -41,10 +41,12 @@ if __name__ == '__main__':
     random_state = params.base.random_state
     test_size = params.data_split.test_size
     
-    data_split(data_dir=data_dir, 
-               data_fname=data_fname, 
-               cat_cols=cat_cols,
-               num_cols=num_cols, 
-               targ_col=targ_col, 
-               test_size=test_size, 
-               random_state=random_state)
+    data_split(
+        data_dir=data_dir, 
+        data_fname=data_fname, 
+        cat_cols=cat_cols,
+        num_cols=num_cols, 
+        targ_col=targ_col, 
+        test_size=test_size, 
+        random_state=random_state
+    )

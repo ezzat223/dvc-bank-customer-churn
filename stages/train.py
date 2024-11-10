@@ -1,11 +1,6 @@
 import sys
 from pathlib import Path
-
-src_path = Path(__file__).parent.parent.resolve()
-sys.path.append(str(src_path))
-
 import argparse
-
 import pandas as pd
 from lightgbm import LGBMClassifier
 from mlem.api import save
@@ -18,13 +13,15 @@ from utils.load_params import load_params
 from xgboost import XGBClassifier
 
 
-def train(data_dir,
-          model_dir,
-          model_type,
-          num_cols,
-          cat_cols,
-          random_state,
-          **train_params):
+def train(
+    data_dir,
+    model_dir,
+    model_type,
+    num_cols,
+    cat_cols,
+    random_state,
+    **train_params
+):
     X_train = pd.read_pickle(data_dir/'X_train.pkl')
     y_train = pd.read_pickle(data_dir/'y_train.pkl')
     
@@ -40,8 +37,8 @@ def train(data_dir,
 
     numeric_transformer = Pipeline(
         steps=[
-            ("imputer", SimpleImputer()),
-            ("scaler", StandardScaler())
+                ("imputer", SimpleImputer()),
+                ("scaler", StandardScaler())
             ]
         )
     categorical_transformer = OrdinalEncoder()
@@ -76,6 +73,7 @@ if __name__ == '__main__':
     num_cols = params.base.num_cols
     model_type = params.train.model_type
     train_params = params.train.params
+    
     train(data_dir=data_dir,
           model_dir=model_dir,
           model_type=model_type,

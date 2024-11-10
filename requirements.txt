@@ -16,3 +16,5 @@ seaborn
 mlem
 docker
 gto
+
+-e .

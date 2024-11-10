@@ -1,22 +1,14 @@
-import sys
 from pathlib import Path
-
-src_path = Path(__file__).parent.parent.resolve()
-sys.path.append(str(src_path))
-
 import argparse
 import json
-
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from dvclive import Live
 from eli5.sklearn import PermutationImportance
 from joblib import dump
 from mlem.api import load
-from sklearn.metrics import (confusion_matrix, f1_score, make_scorer,
-                             roc_auc_score)
+from sklearn.metrics import confusion_matrix, f1_score, make_scorer, roc_auc_score
 from utils.load_params import load_params
 
 
@@ -44,13 +36,14 @@ def eval(data_dir, model_dir, perm_imp_model_path, random_state):
     clf = model.named_steps['clf']
     X_test_transformed = preprocessor.transform(X_test)
 
-    perm = PermutationImportance(clf, 
-                                 scoring=make_scorer(f1_score),
-                                 random_state=random_state)
+    perm = PermutationImportance(
+        clf, 
+        scoring=make_scorer(f1_score),
+        random_state=random_state
+    )
     perm = perm.fit(X_test_transformed, y_test)
     feat_imp = zip(X_test.columns.tolist(), perm.feature_importances_)
-    df_feat_imp = pd.DataFrame(feat_imp, 
-                      columns=['feature', 'importance'])
+    df_feat_imp = pd.DataFrame(feat_imp, columns=['feature', 'importance'])
     df_feat_imp = df_feat_imp.sort_values(by='importance', ascending=False)
     df_feat_imp.to_csv('feat_imp.csv', index=False)
     dump(perm, perm_imp_model_path)
@@ -70,12 +63,16 @@ if __name__ == '__main__':
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--config', dest='config', required=True)
     args = args_parser.parse_args()
+    
     params = load_params(params_path=args.config)
     data_dir = Path(params.base.data_dir)
     model_dir = Path(params.base.model_dir)
     random_state = params.base.random_state
     perm_imp_model_path = Path(params.eval.perm_imp_model_path)
-    eval(data_dir=data_dir, 
-         model_dir=model_dir,
-         perm_imp_model_path=perm_imp_model_path,
-         random_state=random_state)
+    
+    eval(
+        data_dir=data_dir, 
+        model_dir=model_dir,
+        perm_imp_model_path=perm_imp_model_path,
+        random_state=random_state
+    )

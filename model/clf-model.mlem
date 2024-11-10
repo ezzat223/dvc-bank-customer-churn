@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: c8a06d11eee4053037d215f4fe6b7ae5
-    size: 20931746
+    hash: 2f406b2d423b3f07df6bba86e37c1f7e
+    size: 23251655
     uri: clf-model
 call_orders:
   predict:
@@ -49,7 +49,7 @@ processors:
           shape:
           - null
           type: ndarray
-        varkw: predict_params
+        varkw: params
       predict_proba:
         args:
         - name: X
@@ -86,12 +86,13 @@ processors:
           - null
           - 2
           type: ndarray
-        varkw: predict_proba_params
+        varkw: params
     type: sklearn_pipeline
 requirements:
 - module: numpy
-  version: 1.23.5
+  version: 1.26.4
 - module: pandas
-  version: 1.5.2
+  version: 2.2.3
 - module: sklearn
-  version: 1.2.0
+  package_name: scikit-learn
+  version: 1.5.2

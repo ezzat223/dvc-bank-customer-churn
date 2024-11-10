@@ -7,3 +7,5 @@ def load_params(params_path):
         params = yaml.safe_load(f)
         params = ConfigBox(params)
     return params
+
+print(load_params("./params.yaml"))
